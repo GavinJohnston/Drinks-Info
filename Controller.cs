@@ -85,6 +85,7 @@ namespace DrinksInfo
             }
 
             return CatMenu;
+
         }
 
         public static List<MenuList> CatItems(string Catname) {
@@ -112,7 +113,7 @@ namespace DrinksInfo
 
             foreach (MenuListFull item in CatMenu)
             {
-                if(item.MenuItem == DrinkName) {
+                if(item.MenuItem.Replace(" ", "_") == DrinkName) {
                     ItemID = item.MenuItemID;
                 }
             }
@@ -135,8 +136,13 @@ namespace DrinksInfo
                 bool HasAlcohol = value["strAlcoholic"].ToString() == "Alcoholic" ? true : false;
                 string Glass = value["strGlass"].ToString();
                 string HowTo = value["strInstructions"].ToString();
+                string IngredientList = "";
 
-                
+                for(int i = 1; i <= 15; i++) {
+                    if(value[$"strIngredient{i}"].ToString() != "") {
+                        IngredientList += $"{value[$"strIngredient{i}"]}, ";
+                    }
+                }
 
                 DrinkInfo.Add(
                     new DrinkInfo {
@@ -144,11 +150,10 @@ namespace DrinksInfo
                         isAlcoholic = HasAlcohol,
                         GlassType = Glass,
                         Instructions = HowTo,
-                        Ingredients = "No"
+                        Ingredients = IngredientList.Remove(IngredientList.Length - 2) + "."
                     }
                 );  
             }
-            
             return DrinkInfo;
         }
     }

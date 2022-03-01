@@ -73,6 +73,18 @@ namespace DrinksInfo
             {
                 Console.WriteLine($"Name: {item.DrinkName}\nAlcoholic: {item.isAlcoholic}\nGlass Type: {item.GlassType}\nInstructions: {item.Instructions}\nIngredients: {item.Ingredients}");
             }
+
+            Console.WriteLine("\nFor more recipes Press any key to return to the drinks menu, or press 0 to close\n");
+
+            string UserInput = Console.ReadLine();
+
+            if(UserInput == "0") {
+                Console.Clear();
+                Console.WriteLine("Goodbye..");
+                System.Environment.Exit(1);
+            } else {
+                MainMenu();
+            }
         }
 
         public static int GetListItem(List<MenuList> List) {
