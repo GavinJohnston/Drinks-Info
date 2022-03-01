@@ -38,7 +38,7 @@ namespace DrinksInfo
 
         public static void DrinkMenu(string DrinkListChoice) {
 
-            var catItems = Controller.GetCatItems(DrinkListChoice.Replace(" ", "_"));
+            var catItems = Controller.CatItems(DrinkListChoice.Replace(" ", "_"));
 
             Console.Clear();
 
@@ -56,15 +56,23 @@ namespace DrinksInfo
                 if(i == NumChoice) {
                     string DrinkName = catItems[i - 1].MenuItem;
 
-                    GetDrink(DrinkName.Replace(" ", "_"), catItems);
+                    GetDrink(DrinkName.Replace(" ", "_"), DrinkListChoice.Replace(" ", "_"));
                 }
             }
         }
 
-        public static void GetDrink(string DrinkName, List<MenuList> List) {
+        public static void GetDrink(string DrinkName, string DrinkListChoice) {
 
+            Console.Clear();
 
+            Console.WriteLine("Recipe\n");
 
+            var getDrinks = Controller.GetDrinkInfo(DrinkName, DrinkListChoice.Replace(" ", "_"));
+
+            foreach (DrinkInfo item in getDrinks)
+            {
+                Console.WriteLine($"Name: {item.DrinkName}\nAlcoholic: {item.isAlcoholic}\nGlass Type: {item.GlassType}\nInstructions: {item.Instructions}\nIngredients: {item.Ingredients}");
+            }
         }
 
         public static int GetListItem(List<MenuList> List) {

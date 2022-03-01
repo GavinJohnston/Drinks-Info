@@ -52,7 +52,7 @@ namespace DrinksInfo
             return List;
         }
 
-        public static List<MenuList> GetCatItems(string CatName) {
+        public static List<MenuListFull> GetCatItems(string CatName) {
 
             string CategoryUrl = $"https://www.thecocktaildb.com/api/json/v1/1/filter.php?c={CatName}";
 
@@ -84,6 +84,12 @@ namespace DrinksInfo
                 ItemIndex++;     
             }
 
+            return CatMenu;
+        }
+
+        public static List<MenuList> CatItems(string Catname) {
+            var CatMenu = GetCatItems(Catname);
+
             List<MenuList> List = new();
 
             foreach (MenuListFull item in CatMenu)
@@ -97,6 +103,53 @@ namespace DrinksInfo
             }
 
             return List;
+        }
+
+        public static List<DrinkInfo> GetDrinkInfo(string DrinkName, string DrinkListChoice) {
+            var CatMenu = GetCatItems(DrinkListChoice);
+
+            int ItemID = 0;
+
+            foreach (MenuListFull item in CatMenu)
+            {
+                if(item.MenuItem == DrinkName) {
+                    ItemID = item.MenuItemID;
+                }
+            }
+
+            string CategoryID = $"https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={ItemID}";
+
+            var client = new RestClient(CategoryID);
+
+            var request = new RestRequest();
+
+            var response = client.GetAsync(request).Result.Content;
+
+            JObject Json = JObject.Parse(response);
+            
+            List<DrinkInfo> DrinkInfo = new();
+
+            foreach (var value in Json["drinks"])
+            {
+                string Name = value["strDrink"].ToString();
+                bool HasAlcohol = value["strAlcoholic"].ToString() == "Alcoholic" ? true : false;
+                string Glass = value["strGlass"].ToString();
+                string HowTo = value["strInstructions"].ToString();
+
+                
+
+                DrinkInfo.Add(
+                    new DrinkInfo {
+                        DrinkName = Name,
+                        isAlcoholic = HasAlcohol,
+                        GlassType = Glass,
+                        Instructions = HowTo,
+                        Ingredients = "No"
+                    }
+                );  
+            }
+            
+            return DrinkInfo;
         }
     }
 }
@@ -112,7 +165,10 @@ public class MenuList {
     public string MenuItem {get; set;}
 }
 
-
 public class DrinkInfo {
-
+    public string DrinkName {get; set;}
+    public bool isAlcoholic {get; set;}
+    public string GlassType {get; set;}
+    public string Instructions {get; set;}
+    public string Ingredients {get; set;}
 }
