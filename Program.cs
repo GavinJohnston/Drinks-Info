@@ -6,7 +6,11 @@ namespace DrinksInfo
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Welcome to Drinks Info, Press any key to get started..");
+
+            Console.ReadLine();
+
+            userInput.MainMenu();
         }
     }
 }
